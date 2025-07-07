@@ -1,0 +1,10 @@
+app = "fake-minecraft-motd"
+
+[build]
+
+[[services]]
+  internal_port = 25565
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 25565
