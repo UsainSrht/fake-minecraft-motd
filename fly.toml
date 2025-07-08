@@ -6,3 +6,6 @@ app = "fake-minecraft-motd"
 
   [[services.ports]]
     port = 25565
+
+  auto_start = true
+  auto_stop = false
