@@ -1,4 +1,5 @@
 const net = require("net");
+const varint = require("varint");
 
 const motd = "§aMy Fake Server §7| §bWelcome!";
 const version = "1.20.4";
@@ -17,18 +18,19 @@ const server = net.createServer(socket => {
     };
 
     const json = JSON.stringify(response);
-    const dataBuffer = Buffer.from(json, "utf-8");
+  const jsonBuffer = Buffer.from(json, "utf-8");
 
-    const packet = Buffer.concat([
-      Buffer.from([0x00]), // packet ID
-      Buffer.from([dataBuffer.length]), // length
-      dataBuffer
-    ]);
+  const packetId = Buffer.from([0x00]);
+  const dataLength = varint.encode(jsonBuffer.length + 1); // +1 for packetId
+  const packetLength = varint.encode(jsonBuffer.length + 1);
 
-    socket.write(Buffer.concat([
-      Buffer.from([0x00, packet.length]),
-      packet
-    ]));
+  const fullPacket = Buffer.concat([
+    Buffer.from(varint.encode(jsonBuffer.length + 1)), // full packet length
+    packetId,
+    jsonBuffer
+  ]);
+
+  socket.write(fullPacket);
 
     console.log(`[<] Sent MOTD to ${remoteAddress}`);
     socket.end();
