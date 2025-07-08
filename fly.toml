@@ -9,3 +9,8 @@ app = "fake-minecraft-motd"
 
   auto_start = true
   auto_stop = false
+
+  [[services.checks]]
+    type     = "tcp"
+    interval = "10s"
+    timeout  = "2s"
